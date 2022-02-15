@@ -1,0 +1,26 @@
+{
+  "name": "mern-api-rest",
+  "version": "1.0.0",
+  "description": "Social network based on Twitter done for \"Arquitectura software\".",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fntkg/mern-api-rest.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fntkg/mern-api-rest/issues"
+  },
+  "homepage": "https://github.com/fntkg/mern-api-rest#readme",
+  "dependencies": {
+    "body-parser": "^1.19.1",
+    "express": "^4.17.2",
+    "mongoose": "^6.2.1",
+    "swagger-ui-express": "^4.3.0"
+  }
+}
