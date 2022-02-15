@@ -3,17 +3,9 @@
   "info": {
     "description": "REST API for Twitter like application",
     "version": "1.0.0",
-    "title": "Swagger Petstore",
-    "termsOfService": "http://swagger.io/terms/",
-    "contact": {
-      "email": "apiteam@swagger.io"
-    },
-    "license": {
-      "name": "Apache 2.0",
-      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-    }
+    "title": "Swagger Petstore"
   },
-  "host": "localhost:3000",
+  "host": "https://software-architecture-22.herokuapp.com/",
   "basePath": "/api",
   "tags": [
     {
@@ -333,7 +325,7 @@
           "type": "string",
           "format": "email"
         },
-        "alias": {
+        "username": {
           "type": "string"
         },
         "name": {
@@ -344,17 +336,10 @@
         },
         "bio": {
           "type": "string"
-        },
-        "last_messages": {
-          "type": "array",
-          "items": {
-            "type": "object"
-          }
         }
       },
       "required": [
         "email",
-        "alias",
         "username",
         "name",
         "surname"
@@ -375,15 +360,6 @@
         },
         "text": {
           "type": "string"
-        },
-        "or_comment": {
-          "type": "object"
-        },
-        "comments": {
-          "type": "array",
-          "items": {
-            "type": "object"
-          }
         }
       },
       "required": [
