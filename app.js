@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-require('./db');
+//require('./db');
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
