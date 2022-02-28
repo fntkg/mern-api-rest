@@ -60,6 +60,7 @@
         "responses": {
           "201": { "description": "Ok"},
           "400": { "description": "Bad Request" },
+          "409": { "description": "Datos únicos formulario ya en uso" },
           "500": { "description": "Internal server error"}
         }
       }
@@ -160,13 +161,17 @@
       "type": "object",
       "properties": {
         "email": { "type": "string", "format": "email" },
+        "password": { "type": "string" },
         "username": { "type": "string" },
         "name": { "type": "string" },
         "surname": { "type": "string" },
-        "bio": { "type": "string" }
+        "bio": { "type": "string" },
+        "follows": { "type": "[User]"},
+        "followers": { "type":  "[User]"}
       },
       "required": [
         "email",
+        "password",
         "username",
         "name",
         "surname"
