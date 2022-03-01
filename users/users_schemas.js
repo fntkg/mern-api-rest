@@ -9,8 +9,12 @@ const UserSchema = new mongoose.Schema({
     name: { type: String, required: true},
     surname: { type: String, required: true},
     bio: { type: String },
-    follows: { type: [UserSchema]},
-    followers: { type: [UserSchema]}
+    follows: { type: [String] }, //Array de username
+    follows_total : { type: Number, default: function(){ return this.follows.length;}},
+    //Para no sobreescribir el valor cada vez que se haga un update, añadir a las queries la opcion
+    //setDefaultsOnInsert: false
+    followers: { type: [String] }, //Array de username
+    followers_total : { type: Number, default: function(){ return this.followers.length;}},
     // avatar
 });
 
