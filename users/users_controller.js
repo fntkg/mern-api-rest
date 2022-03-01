@@ -16,7 +16,7 @@ router.post('/api/users', async function (req,
         )
     }
     const isUsernameExist = await User.findOne({username: req.body.email});
-    if (isEmailExist) {
+    if (isUsernameExist) {
         return res.status(409).json(
             {error: 'Apodo ya registrado'}
         )
