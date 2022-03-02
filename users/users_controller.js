@@ -14,7 +14,7 @@ router.all('*', function(req, res, next) {
 });
 
 // Add a new user to the database
-router.post('/api/users', async function (req,
+router.post('/users', async function (req,
                                                         res) {
     const isEmailExist = await User.findOne({email: req.body.email});
     if (isEmailExist) {
