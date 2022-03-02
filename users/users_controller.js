@@ -96,9 +96,62 @@ router.put('/api/users/:username', async function (req,
     })
 
 // Delete an user
-router.delete('/api/users/:username', function (req, res){
-    User.findOneAndRemove({username: req.params.username}, function (err){
+router.delete('/api/users/:username', async function (req,
+                                                      res) {
+    const userFound = await User.findOneAndRemove({username: req.params.username}, function (err) {
         if (err) return res.status(500).send("There was a problema deleting the user.");
-        res.status(200);
+        if (userFound) {
+            res.status(200);
+        } else {
+            return res.status(404).json(
+                {error: 'User no encontrado'}
+            )
+        }
+
     })
 })
+
+// User authentication
+router.post('/api/users/:email/:password', async function (req,
+                                                                        res) {
+    const userFound = await User.findOne({ email: req.params.email},
+        function (err, user) {
+            if (err) return res.status(500).send("There was a problem adding the information to the database.");
+            if (userFound) {
+                user.comparePassword(req.params.password, function (err, isMatch) {
+                    if (err) return res.status(500).send("There was a problem adding the information to the database.");
+                    if (isMatch) {
+                        return res.status(200);
+                    } else {
+                        return res.status(401).json(
+                            {error: 'El email y el password no coinciden'}
+                        )
+                    }
+                })
+            }else{
+                return res.status(404).json(
+                    {error: 'Email no encontrado'}
+                )
+            }
+        })
+})
+/*
+// Add following
+router.post('/user/follow/:username/:usernameFollow', async function (req,
+                                                           res) {
+    const userFound = await User.findOne({ username: req.params.username},
+        async function (err, user) {
+            if (err) return res.status(500).send("There was a problem adding the information to the database.");
+            if (userFound) {
+                await User.updateOne({username: req.params.username},
+                    {"$set": {name: req.params.name}},
+                    function (err, user) {
+                        if (err) return res.status(500).send("There was a problem updating the user.");
+                    })
+            } else {
+                return res.status(404).json(
+                    {error: 'User no encontrado'}
+                )
+            }
+        })
+})*/
