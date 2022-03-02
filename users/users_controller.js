@@ -14,7 +14,7 @@ router.all('*', function(req, res, next) {
 });
 
 // Add a new user to the database
-router.post('/users', async function (req,
+router.post('/api/users', async function (req,
                                                         res) {
     const isEmailExist = await User.findOne({email: req.body.email});
     if (isEmailExist) {
@@ -30,10 +30,9 @@ router.post('/users', async function (req,
     }
     User.create({
             name: req.body.name,
+            surname: req.body.surname,
             username: req.body.username,
             email: req.body.email,
-            username: req.body.username,
-            surname: req.body.surname,
             password: req.body.password
         },
         function (err, user) {
