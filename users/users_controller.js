@@ -6,6 +6,13 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 const User = require('./users_schemas');
 
+router.all('*', function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+});
+
 // Add a new user to the database
 router.post('/api/users', async function (req,
                                                         res) {
@@ -57,42 +64,43 @@ router.put('/api/users/:username', async function (req,
     const userFound = await User.find({username: req.params.username},
         async function (err, user) {
             if (err) return res.status(500).send("There was a problem finding the user.");
+            if (userFound){
+                if (req.params.name !== ""){
+                    await userFound.updateOne({},
+                        {"$set": {name: req.params.name}},
+                        function (err, user) {
+                            if (err) return res.status(500).send("There was a problem updating the user.");
+                        })
+                }
+                if (req.params.surname !== ""){
+                    await userFound.updateOne({},
+                        {"$set": {surname: req.params.surname}},
+                        function (err, user) {
+                            if (err) return res.status(500).send("There was a problem updating the user.");
+                        })
+                }
+                if (req.params.email !== ""){
+                    await userFound.updateOne({},
+                        {"$set": {email: req.params.email}},
+                        function (err, user) {
+                            if (err) return res.status(500).send("There was a problem updating the user.");
+                        })
+                }
+                if (req.params.bio !== "") {
+                    await userFound.updateOne({},
+                        {"$set": {bio: req.params.bio}},
+                        function (err, user) {
+                            if (err) return res.status(500).send("There was a problem updating the user.");
+                        })
+                }
+                res.status(200).send(user); //Que usuario devuelve????
+            }else{
+                return res.status(404).json(
+                    {error: 'Usuario no encontrado'}
+                )
+            }
         })
-    if (userFound){
-        if (req.params.name !== ""){
-            await User.updateOne({username: req.params.username},
-                {"$set": {name: req.params.name}},
-                function (err, user) {
-                    if (err) return res.status(500).send("There was a problem updating the user.");
-                })
-        }
-        if (req.params.surname !== ""){
-            await User.updateOne({username: req.params.username},
-                {"$set": {surname: req.params.surname}},
-                function (err, user) {
-                    if (err) return res.status(500).send("There was a problem updating the user.");
-                })
-        }
-        if (req.params.email !== ""){
-            await User.updateOne({username: req.params.username},
-                {"$set": {email: req.params.email}},
-                function (err, user) {
-                    if (err) return res.status(500).send("There was a problem updating the user.");
-                })
-        }
-        if (req.params.bio !== "") {
-            await User.updateOne({username: req.params.username},
-                {"$set": {bio: req.params.bio}},
-                function (err, user) {
-                    if (err) return res.status(500).send("There was a problem updating the user.");
-                })
-            res.status(200).send(user); //Que usuario devuelve????
-        }
-    }else{
-        return res.status(404).json(
-            {error: 'Usuario no encontrado'}
-        )
-    }
+
     })
 
 // Delete an user
@@ -137,14 +145,14 @@ router.post('/api/users/:email/:password', async function (req,
 })
 /*
 // Add following
-router.post('/user/follow/:username/:usernameFollow', async function (req,
+router.post('/user/follow/:username/:follows', async function (req,
                                                            res) {
     const userFound = await User.findOne({ username: req.params.username},
         async function (err, user) {
             if (err) return res.status(500).send("There was a problem adding the information to the database.");
             if (userFound) {
-                await User.updateOne({username: req.params.username},
-                    {"$set": {name: req.params.name}},
+                await userFound.updateOne({},
+                    {"$push": {follows: req.params.follows}},
                     function (err, user) {
                         if (err) return res.status(500).send("There was a problem updating the user.");
                     })

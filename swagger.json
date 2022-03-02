@@ -185,7 +185,7 @@
         }
       }
     },
-    "/user/follow/{username}/{usernameFollow}": {
+    "/user/follow/{username}/{follows}": {
       "put": {
         "tags": [
           "users"
