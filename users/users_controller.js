@@ -13,8 +13,18 @@ router.all('*', function(req, res, next) {
     next();
 });
 
+// ENDPOINT PARA PROBAR COSAS -> NO SE PUEDE QUEDAR EN LA ENTREGA DEL PROYECTO
+// Get all users
+router.get('/', function(req, res) {
+    console.log('Request received')
+    User.find({}, function (err, users) {
+        if (err) return res.status(500).send("There was a problem finding the users.");
+        res.status(200).send(users);
+    });
+});
+
 // Add a new user to the database
-router.post('/api/users', async function (req,
+router.post('/', async function (req,
                                                         res) {
     const isEmailExist = await User.findOne({email: req.body.email});
     if (isEmailExist) {
@@ -42,7 +52,7 @@ router.post('/api/users', async function (req,
 })
 
 // Get user by user name
-router.get('/api/users/:username', async function (req,
+router.get('/:username', async function (req,
                                                                 res) {
     await User.find({username: req.params.username},
         function (err, user) {
@@ -58,7 +68,7 @@ router.get('/api/users/:username', async function (req,
 })
 
 // Update an user
-router.put('/api/users/:username', async function (req,
+router.put('/:username', async function (req,
                                                                 res) {
     const userFound = await User.find({username: req.params.username},
         async function (err, user) {
@@ -103,7 +113,7 @@ router.put('/api/users/:username', async function (req,
     })
 
 // Delete an user
-router.delete('/api/users/:username', async function (req,
+router.delete('/:username', async function (req,
                                                       res) {
     const userFound = await User.findOneAndRemove({username: req.params.username}, function (err) {
         if (err) return res.status(500).send("There was a problema deleting the user.");
@@ -118,30 +128,6 @@ router.delete('/api/users/:username', async function (req,
     })
 })
 
-// User authentication
-router.post('/api/users/:email/:password', async function (req,
-                                                                        res) {
-    const userFound = await User.findOne({ email: req.params.email},
-        function (err, user) {
-            if (err) return res.status(500).send("There was a problem adding the information to the database.");
-            if (userFound) {
-                user.comparePassword(req.params.password, function (err, isMatch) {
-                    if (err) return res.status(500).send("There was a problem adding the information to the database.");
-                    if (isMatch) {
-                        return res.status(200);
-                    } else {
-                        return res.status(401).json(
-                            {error: 'El email y el password no coinciden'}
-                        )
-                    }
-                })
-            }else{
-                return res.status(404).json(
-                    {error: 'Email no encontrado'}
-                )
-            }
-        })
-})
 /*
 // Add following
 router.post('/user/follow/:username/:follows', async function (req,
@@ -162,3 +148,5 @@ router.post('/user/follow/:username/:follows', async function (req,
             }
         })
 })*/
+
+module.exports = router;

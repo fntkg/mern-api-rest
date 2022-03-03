@@ -11,6 +11,10 @@
     {
       "name": "users",
       "description": "CRUD operations about users"
+    },
+    {
+      "name": "auth",
+      "description": "Login endpoint"
     }
   ],
   "schemes": [
@@ -150,12 +154,12 @@
         }
       }
     },
-    "/user/{email}/{password}": {
+    "/login": {
       "post": {
-        "tags": [
-          "users"
-        ],
         "summary": "User authentication",
+        "tags": [
+          "auth"
+        ],
         "description": "",
         "operationId": "loginUser",
         "produces": [
@@ -163,36 +167,31 @@
         ],
         "parameters": [
           {
-            "name": "email",
-            "in": "path",
-            "description": "The email of the user to authenticate",
+            "in": "body",
+            "name": "body",
+            "description": "Updated user object",
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "password",
-            "in": "path",
-            "description": "The password of the user to authenticate",
-            "required": true,
-            "type": "string"
+            "schema": {
+              "$ref": "#/definitions/Login"
+            }
           }
         ],
         "responses": {
-          "200": { "description": "Successful operation" },
+          "200": { "description": "Successful operation", "schema": {"$ref": "#/definitions/JWT"}},
           "401": { "description": "Unauthorized request"},
           "404": { "description": "Email not found" },
           "500": { "description": "Internal server error"}
         }
       }
     },
-    "/user/follow/{username}/{follows}": {
-      "put": {
+    "/user/{username}/follow": {
+      "post": {
         "tags": [
           "users"
         ],
         "summary": "Add user to follow",
         "description": "This can only be done by the logged in user.",
-        "operationId": "updateUser",
+        "operationId": "followUser",
         "produces": [
           "application/json"
         ],
@@ -205,20 +204,11 @@
             "type": "string"
           },
           {
-            "name": "usernameFollow",
-            "in": "path",
+            "name": "usernameFollowed",
+            "in": "formData",
             "description": "username to follow",
             "required": true,
             "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Updated user object",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
           }
         ],
         "responses": {
@@ -240,8 +230,8 @@
         "name": { "type": "string" },
         "surname": { "type": "string" },
         "bio": { "type": "string" },
-        "follows": { "type": "[User]"},
-        "followers": { "type":  "[User]"}
+        "follows": { "type": "array", "items": { "type": "string"}},
+        "followers": { "type": "array", "items": { "type": "string"}}
       },
       "required": [
         "email",
@@ -250,6 +240,19 @@
         "name",
         "surname"
       ]
+    },
+    "Login": {
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "format": "email" },
+        "password": { "type": "string" }
+      }
+    },
+    "JWT": {
+      "type": "object",
+      "properties": {
+        "token": { "type": "string" }
+      }
     }
   }
 }
