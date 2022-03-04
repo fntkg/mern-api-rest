@@ -53,13 +53,14 @@ router.post('/', async function (req,
 })
 
 // Get user by user name
+// No devolver contraseña a front
 router.get('/:username', function (req,
                                                                 res) {
     User.find({username: req.params.username},
         function (err, user) {
             if (err) return res.status(500).send("There was a problem finding the user.");
             if (user.length) {
-                return res.status(200).send(user);
+                return res.status(200).send(user)
             } else {
                 return res.status(404).json(
                     {error: 'Usuario no encontrado'}
