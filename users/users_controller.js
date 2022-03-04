@@ -70,56 +70,62 @@ router.get('/:username', function (req,
 })
 
 // Update an user
-router.put('/:username', async function (req,
+router.put('/:username', function (req,
                                                                 res) {
-    const userFound = await User.find({username: req.params.username},
-        async function (err, user) {
+    if(req.body.name !== ""){
+        User.findOneAndUpdate(
+            {username: req.params.username},
+            {"$set": {name: req.body.name}},
+            { function (err,user) {
+                    if (err) return res.status(500).send("There was a problem updating the user.");
+            }})
+    }
+    if(req.body.surname !== ""){
+        User.findOneAndUpdate(
+            {username: req.params.username},
+            {"$set": {surname: req.body.surname}},
+            { new: true, function (err,user) {
+                    if (err) return res.status(500).send("There was a problem updating the user.");
+                }})
+    }
+    if(req.body.email !== ""){
+        User.findOneAndUpdate(
+            {username: req.params.username},
+            {"$set": {email: req.body.email}},
+            { function (err,user) {
+                    if (err) return res.status(500).send("There was a problem updating the user.");
+                }})
+    }
+    if(req.body.bio !== ""){
+        User.findOneAndUpdate(
+            {username: req.params.username},
+            {"$set": {bio: req.body.bio}},
+            { new: true, function (err,user) {
+                    if (err) return res.status(500).send("There was a problem updating the user.");
+                }})
+    }
+    User.find({username: req.params.username},
+        function (err, user) {
             if (err) return res.status(500).send("There was a problem finding the user.");
-            if (userFound){
-                if (req.params.name !== ""){
-                    await userFound.updateOne({},
-                        {"$set": {name: req.params.name}},
-                        function (err, user) {
-                            if (err) return res.status(500).send("There was a problem updating the user.");
-                        })
-                }
-                if (req.params.surname !== ""){
-                    await userFound.updateOne({},
-                        {"$set": {surname: req.params.surname}},
-                        function (err, user) {
-                            if (err) return res.status(500).send("There was a problem updating the user.");
-                        })
-                }
-                if (req.params.email !== ""){
-                    await userFound.updateOne({},
-                        {"$set": {email: req.params.email}},
-                        function (err, user) {
-                            if (err) return res.status(500).send("There was a problem updating the user.");
-                        })
-                }
-                if (req.params.bio !== "") {
-                    await userFound.updateOne({},
-                        {"$set": {bio: req.params.bio}},
-                        function (err, user) {
-                            if (err) return res.status(500).send("There was a problem updating the user.");
-                        })
-                }
-                res.status(200).send(user); //Que usuario devuelve????
-            }else{
+            if (user.length) {
+                return res.status(200).send(user)
+            } else {
                 return res.status(404).json(
                     {error: 'Usuario no encontrado'}
                 )
             }
         })
+})
 
-    })
 
 // Delete an user
-router.delete('/:username', async function (req,
+router.delete('/:username', function (req,
                                                       res) {
-    const userFound = await User.findOneAndRemove({username: req.params.username}, function (err) {
+    User.findOneAndRemove({username: req.params.username}, function (err,user) {
         if (err) return res.status(500).send("There was a problema deleting the user.");
-        if (userFound) {
+        console.log(user)
+        return res.status(200);
+        if (user) {
             res.status(200);
         } else {
             return res.status(404).json(
