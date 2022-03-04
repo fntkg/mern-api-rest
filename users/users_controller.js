@@ -26,6 +26,7 @@ router.get('/', function(req, res) {
 // Add a new user to the database
 router.post('/', async function (req,
                                                         res) {
+    console.log('Request received')
     const isEmailExist = await User.findOne({email: req.body.email});
     if (isEmailExist) {
         return res.status(409).json(
@@ -52,9 +53,9 @@ router.post('/', async function (req,
 })
 
 // Get user by user name
-router.get('/:username', async function (req,
+router.get('/:username', function (req,
                                                                 res) {
-    await User.find({username: req.params.username},
+    User.find({username: req.params.username},
         function (err, user) {
             if (err) return res.status(500).send("There was a problem finding the user.");
             if (user.length) {
