@@ -62,7 +62,7 @@
           }
         ],
         "responses": {
-          "200": { "description": "Ok"},
+          "200": { "description": "Ok", "schema": {"$ref": "#/definitions/User"}},
           "409": { "description": "Datos únicos formulario ya en uso" },
           "500": { "description": "Internal server error"}
         }

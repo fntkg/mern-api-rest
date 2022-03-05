@@ -15,19 +15,21 @@ router.all('*', function(req, res, next) {
 });
 
 // User authentication
-router.post('/', async function (req, res) {
+router.post('/', function (req, res) {
     console.log('Login request received')
-    const userFound = await User.findOne({ email: req.params.email},
+    User.findOne({ email: req.body.email},
         function (err, user) {
             if (err) return res.status(500).send("There was a problem adding the information to the database.");
-            if (userFound) {
-                user.comparePassword(req.params.password, function (err, isMatch) {
-                    if (err) return res.status(500).send("There was a problem adding the information to the database.");
+            if (user) {
+                user.comparePassword(req.body.password, function (err, isMatch) {
+                    if (err) throw err;
                     if (isMatch) {
                         // CREATE AND SEND JWT TOKEN
-                        //const token = jwt.generateAccessToken({ username: user.username }); //VER QUE LE PASO A ESTA FUNCION
-                        //return res.status(200).send(token);
-                        return res.status(200)
+                        const token = jwt.generateAccessToken({ username: user.username }); //VER QUE LE PASO A ESTA FUNCION
+                        return res.status(200).send({
+                            user: user,
+                            token: token
+                        });
                     } else {
                         return res.status(401).json(
                             {error: 'El email y el password no coinciden'}
