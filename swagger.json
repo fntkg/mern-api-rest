@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "title": "Swagger Petstore"
   },
-  "host": "software-architecture-22.herokuapp.com",
+  "host": "localhost:3000",
   "basePath": "/api",
   "tags": [
     {

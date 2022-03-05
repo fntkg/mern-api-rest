@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
+const jwt = require('./auth')
 
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
@@ -14,8 +15,8 @@ router.all('*', function(req, res, next) {
 });
 
 // User authentication
-router.post('/', async function (req,
-                                                           res) {
+router.post('/', async function (req, res) {
+    console.log('Login request received')
     const userFound = await User.findOne({ email: req.params.email},
         function (err, user) {
             if (err) return res.status(500).send("There was a problem adding the information to the database.");
@@ -23,7 +24,10 @@ router.post('/', async function (req,
                 user.comparePassword(req.params.password, function (err, isMatch) {
                     if (err) return res.status(500).send("There was a problem adding the information to the database.");
                     if (isMatch) {
-                        return res.status(200);
+                        // CREATE AND SEND JWT TOKEN
+                        //const token = jwt.generateAccessToken({ username: user.username }); //VER QUE LE PASO A ESTA FUNCION
+                        //return res.status(200).send(token);
+                        return res.status(200)
                     } else {
                         return res.status(401).json(
                             {error: 'El email y el password no coinciden'}
