@@ -4,7 +4,7 @@
   "description": "Social network based on Twitter done for \"Arquitectura software\".",
   "main": "server.js",
   "scripts": {
-    "test": "jest --testTimeout=10000"
+    "test": "jest --testTimeout=10000 --forceExit"
   },
   "repository": {
     "type": "git",

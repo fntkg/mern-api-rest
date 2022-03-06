@@ -2,6 +2,7 @@ const request = require('supertest')
 const app = require('../server')
 const User = require('../users/users_schemas')
 const {response} = require("express");
+const mongoose = require("mongoose");
 
 // POR AHORA SOLO COMPRUEBA LOS CÓDIGOS HTTP
 // HAY QUE HACER QUE PRUEBEN QUE SE CUMPLE LA DOCUMENTACION DE LA API
@@ -9,6 +10,11 @@ const {response} = require("express");
 beforeEach(async () => {
     // seed with some data
     await User.deleteMany()
+});
+
+afterAll(async () => {
+    await app.close();
+    mongoose.disconnect()
 });
 
 describe('POST /user', () => {
