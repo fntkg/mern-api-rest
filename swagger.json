@@ -22,7 +22,7 @@
     "http"
   ],
   "paths": {
-    "/users": {
+    "/user": {
       "post": {
         "tags": [
           "users"

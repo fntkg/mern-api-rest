@@ -20,6 +20,7 @@ router.get('/', function(req, res) {
     console.log('Request received')
     User.find({}, function (err, users) {
         if (err) return res.status(500).send("There was a problem finding the users.");
+        console.log(users)
         res.status(200).send(users);
     });
 });
