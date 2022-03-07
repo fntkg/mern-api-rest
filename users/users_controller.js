@@ -174,25 +174,26 @@ router.delete('/:username', function (req,
     }
 })
 
-/*
 // Add following
-router.post('/user/follow/:username/:follows', async function (req,
-                                                           res) {
-    const userFound = await User.findOne({ username: req.params.username},
-        async function (err, user) {
-            if (err) return res.status(500).send("There was a problem adding the information to the database.");
-            if (userFound) {
-                await userFound.updateOne({},
-                    {"$push": {follows: req.params.follows}},
-                    function (err, user) {
-                        if (err) return res.status(500).send("There was a problem updating the user.");
+router.post('/:following/:followed', function (req,
+                                             res) {
+    User.find({username: req.params.followed},
+        function (err, user) {
+            console.log(req.params.followed + user)
+            if (user.length) {
+                console.log(req.params.following)
+                User.findOneAndUpdate(
+                    {username: req.params.following},
+                    {"$push": {follows: req.params.followed}},
+                    {
+                        function(err, user) {
+                            if (err) return res.status(500).send("There was a problem updating the user.");
+                            console.log("algo")
+                            res.status(200).send(user);
+                        }
                     })
-            } else {
-                return res.status(404).json(
-                    {error: 'User no encontrado'}
-                )
             }
         })
-})*/
+})
 
 module.exports = router;
