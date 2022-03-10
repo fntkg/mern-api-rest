@@ -1,257 +1,605 @@
 {
-  "swagger": "2.0",
+  "openapi": "3.0.0",
   "info": {
-    "description": "REST API for Twitter like application",
-    "version": "1.0.0",
-    "title": "Swagger Petstore"
+    "title": "API",
+    "description": "API to manage user accounts and his messages (twitter like)",
+    "version": "0.0.0"
   },
-  "host": "localhost:3000",
-  "basePath": "/api",
-  "tags": [
+  "servers": [
     {
-      "name": "users",
-      "description": "CRUD operations about users"
+      "url": "https://software-architecture-22.herokuapp.com/",
+      "description": "Production server"
     },
     {
-      "name": "auth",
-      "description": "Login endpoint"
+      "url": "http://localhost:3000/",
+      "description": "Development"
     }
   ],
-  "schemes": [
-    "https",
-    "http"
-  ],
   "paths": {
-    "/user": {
-      "post": {
-        "tags": [
-          "users"
-        ],
-        "summary": "Add a new user to the database",
-        "description": "",
-        "operationId": "addUser",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "User object that needs to be added to the database",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "email": { "type": "string", "format": "email" },
-                "username": { "type": "string" },
-                "password": { "type":  "string", "format": "password"},
-                "name": { "type": "string" },
-                "surname": { "type": "string" },
-                "bio": { "type": "string" }
-              },
-              "required": [
-                "email",
-                "username",
-                "name",
-                "surname"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": { "description": "Ok", "schema": {"$ref": "#/definitions/User"}},
-          "409": { "description": "Datos únicos formulario ya en uso" },
-          "500": { "description": "Internal server error"}
-        }
-      }
-    },
-    "/user/{username}": {
-      "get": {
-        "tags": [
-          "users"
-        ],
-        "summary": "Get user by user name",
-        "description": "",
-        "operationId": "getUserByUsername",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "username",
-            "in": "path",
-            "description": "The name that needs to be fetched.",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": { "description": "successful operation", "schema": {"$ref": "#/definitions/User"}},
-          "404": { "description": "User not found" },
-          "500": { "description": "Internal server error"}
-        }
-      },
-      "put": {
-        "tags": [
-          "users"
-        ],
-        "summary": "Update user",
-        "description": "This can only be done by the logged in user.",
-        "operationId": "updateUser",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "username",
-            "in": "path",
-            "description": "username that need to be updated",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Updated user object",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
-        ],
-        "responses": {
-          "200": { "description": "Successful operation", "schema": {"$ref": "#/definitions/User"}},
-          "404": { "description": "User not found" },
-          "500": { "description": "Internal server error"}
-        }
-      },
-      "delete": {
-        "tags": [
-          "users"
-        ],
-        "summary": "Delete user",
-        "description": "This can only be done by the logged in user.",
-        "operationId": "deleteUser",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "username",
-            "in": "path",
-            "description": "The name that needs to be deleted",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": { "description": "Successful operation"},
-          "404": { "description": "User not found" },
-          "500": { "description": "Internal server error"}
-        }
-      }
-    },
     "/login": {
       "post": {
-        "summary": "User authentication",
+        "summary": "Log in an user",
         "tags": [
           "auth"
         ],
-        "description": "",
-        "operationId": "loginUser",
-        "produces": [
-          "application/json"
+        "requestBody": {
+          "description": "Username and password of the user to log in",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "username",
+                  "password"
+                ],
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "summary": "Returns a list of users",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "users"
         ],
         "parameters": [
           {
-            "in": "body",
-            "name": "body",
-            "description": "Updated user object",
-            "required": true,
+            "in": "query",
+            "name": "username",
+            "description": "Username to search.",
             "schema": {
-              "$ref": "#/definitions/Login"
+              "type": "string"
             }
           }
         ],
         "responses": {
-          "200": { "description": "Successful operation", "schema": {"$ref": "#/definitions/JWT"}},
-          "401": { "description": "Unauthorized request"},
-          "404": { "description": "Email not found" },
-          "500": { "description": "Internal server error"}
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "username": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "avatar": {
+                        "type": "string"
+                      },
+                      "bio": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
         }
-      }
-    },
-    "/user/{username}/follow": {
+      },
       "post": {
+        "summary": "Add a new user to the database",
         "tags": [
           "users"
         ],
-        "summary": "Add user to follow",
-        "description": "This can only be done by the logged in user.",
-        "operationId": "followUser",
-        "produces": [
-          "application/json"
+        "requestBody": {
+          "description": "User object to add",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "username",
+                  "name",
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "enum": [
+                        "Email already exists",
+                        "Username already exists"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/users/{username}": {
+      "get": {
+        "summary": "Return an user",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "users"
         ],
         "parameters": [
           {
-            "name": "username",
             "in": "path",
-            "description": "username that need to be updated",
+            "name": "username",
+            "schema": {
+              "type": "string"
+            },
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "usernameFollowed",
-            "in": "formData",
-            "description": "username to follow",
-            "required": true,
-            "type": "string"
+            "description": "Username of the user to retrieve"
           }
         ],
         "responses": {
-          "200": { "description": "Successful operation", "schema": {"$ref": "#/definitions/User"}},
-          "404": { "description": "User not found" },
-          "500": { "description": "Internal server error"}
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "email": {
+                        "type": "string",
+                        "format": "email"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "avatar": {
+                        "type": "string"
+                      },
+                      "bio": {
+                        "type": "string"
+                      },
+                      "followers": {
+                        "type": "integer"
+                      },
+                      "following": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modify an user",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "users"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "username",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Username of the user to modify"
+          }
+        ],
+        "requestBody": {
+          "description": "User object to modify",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password"
+                  },
+                  "avatar": {
+                    "type": "string"
+                  },
+                  "bio": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "email": {
+                        "type": "string",
+                        "format": "email"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "avatar": {
+                        "type": "string"
+                      },
+                      "bio": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an user",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "users"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "username",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Username of the user to delete"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/users/{username}/followers": {
+      "get": {
+        "summary": "Get a list of users who follow {username}",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "users"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "username",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Username of the user to get the followers list"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "username": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "avatar": {
+                        "type": "string"
+                      },
+                      "bio": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/users/{username}/following": {
+      "get": {
+        "summary": "Get a list of users who {username} is following.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "users"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "username",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Username of the user to get the following list"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "username": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "avatar": {
+                        "type": "string"
+                      },
+                      "bio": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Add a new user to the list of following",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "users"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "username",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Username of the user who follow another user"
+          }
+        ],
+        "requestBody": {
+          "description": "Usernames of the users involved in the new relationship",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "followed": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
         }
       }
     }
-
   },
-  "definitions": {
-    "User": {
-      "type": "object",
-      "properties": {
-        "email": { "type": "string", "format": "email" },
-        "password": { "type": "string" },
-        "username": { "type": "string" },
-        "name": { "type": "string" },
-        "surname": { "type": "string" },
-        "bio": { "type": "string" },
-        "follows": { "type": "array", "items": { "type": "string"}},
-        "followers": { "type": "array", "items": { "type": "string"}}
-      },
-      "required": [
-        "email",
-        "password",
-        "username",
-        "name",
-        "surname"
-      ]
-    },
-    "Login": {
-      "type": "object",
-      "properties": {
-        "email": { "type": "string", "format": "email" },
-        "password": { "type": "string" }
-      }
-    },
-    "JWT": {
-      "type": "object",
-      "properties": {
-        "token": { "type": "string" }
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }
