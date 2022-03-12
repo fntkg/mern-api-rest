@@ -18,7 +18,7 @@ describe('Users', () => {
     })*/
 
     after(async (done) => {
-        db.dbDisconnect()
+        await db.dbDisconnect()
         done()
     })
 
