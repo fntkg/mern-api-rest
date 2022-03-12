@@ -5,21 +5,21 @@ let chaiHttp = require('chai-http')
 let server = require('../server')
 let should = chai.should()
 
-const mongoose = require('mongoose')
-const { MongoMemoryServer } = require('mongodb-memory-server')
-let mongoServer
+//const mongoose = require('mongoose')
+//let mongoServer
+const db = require('../db')
 
 chai.use(chaiHttp)
 describe('Users', () => {
-    before(async () => {
+    /*before(async () => {
         mongoServer = await MongoMemoryServer.create()
         const mongoUri = mongoServer.getUri()
         await mongoose.connect(mongoUri)
-    })
+    })*/
 
-    after(async () => {
-        await mongoose.disconnect()
-        await mongoServer.stop()
+    after(async (done) => {
+        //await db.dbDisconnect()
+        done()
     })
 
     beforeEach((done) => { //Before each test we empty the database
