@@ -10,7 +10,9 @@ let db = require('../db')
 chai.use(chaiHttp)
 describe('Users', () => {
     after(() => {
+        console.log("Disconnecting from MongoDb")
         db.disconnect()
+        console.log("done")
     })
 
     beforeEach((done) => { //Before each test we empty the database

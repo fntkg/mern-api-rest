@@ -39,7 +39,6 @@ exports.create = (req, res) => {
             password: req.body.password
         },
         function (err, user) {
-            console.log(err)
             if (err) {
                 if (err.keyPattern.email) { return res.status(409).send({error: 'Email already exists'}) }
                 else if (err.keyPattern.username) { return res.status(409).send({error: 'Username already exists'}) }
