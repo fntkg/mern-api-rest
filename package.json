@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=dev mocha 'tests/*.js' --timeout 60000"
+    "test": "NODE_ENV=test mocha 'tests/*.js' --timeout 60000"
   },
   "keywords": [],
   "author": "",
