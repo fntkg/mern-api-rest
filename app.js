@@ -1,10 +1,12 @@
 const express = require('express');
 const app = express();
-require('./db');
+const db = require('./db');
 const userRoutes = require('./api/users/userRoutes')
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
+
+db.connect()
 
 app.use(express.json())
 app.use(function(req, res, next) {
