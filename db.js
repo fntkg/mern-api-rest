@@ -11,6 +11,7 @@ exports.dbConnect = async () => {
         }
 
         await mongoose.connect(uri);
+        console.log('Connected with database')
     }
 };
 /*const mongoose = require('mongoose');
