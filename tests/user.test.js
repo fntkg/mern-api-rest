@@ -1,4 +1,3 @@
-const mongoose = require('mongoose')
 const User = require('../api/users/userModel')
 
 //Require the dev-dependencies
@@ -6,11 +5,17 @@ let chai = require('chai')
 let chaiHttp = require('chai-http')
 let server = require('../server')
 let should = chai.should()
+let db = require('../db')
 
 chai.use(chaiHttp)
 describe('Users', () => {
+    after(() => {
+        db.disconnect()
+    })
+
     beforeEach((done) => { //Before each test we empty the database
         User.remove({}, (err) => {
+            console.log(err)
             done()
         })
     })

@@ -6,6 +6,9 @@ exports.connect = async () => {
     if (process.env.NODE_ENV === 'dev') {
         const mongoServer = await MongoMemoryServer.create()
         uri = mongoServer.getUri()
+        exports.disconnect = () => {
+            mongoServer.stop()
+        }
         //uri = 'mongodb://127.0.0.1:27017'
         console.log('Running server in DEVELOPMENT mode')
     }
