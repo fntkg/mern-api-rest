@@ -1,18 +1,25 @@
 const User = require('../api/users/userModel')
-
 //Require the dev-dependencies
 let chai = require('chai')
 let chaiHttp = require('chai-http')
 let server = require('../server')
 let should = chai.should()
-let db = require('../db')
+
+const mongoose = require('mongoose')
+const { MongoMemoryServer } = require('mongodb-memory-server')
+let mongoServer
 
 chai.use(chaiHttp)
 describe('Users', () => {
-    after(() => {
-        console.log("Disconnecting from MongoDb")
-        db.disconnect()
-        console.log("done")
+    before(async () => {
+        mongoServer = await MongoMemoryServer.create()
+        const mongoUri = mongoServer.getUri()
+        await mongoose.connect(mongoUri)
+    })
+
+    after(async () => {
+        await mongoose.disconnect()
+        await mongoServer.stop()
     })
 
     beforeEach((done) => { //Before each test we empty the database
