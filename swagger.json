@@ -647,7 +647,7 @@
                       "likes": {
                         "type": "integer"
                       },
-                      "comments": {
+                      "numOfComments": {
                         "type": "integer"
                       }
                     }

@@ -1,6 +1,6 @@
 const router = require('express').Router()
-const userController = require('./users/userControllers')
-const messageController = require('./messages/messageControllers')
+const userController = require('./users/userController')
+const messageController = require('./messages/messageController')
 const jwt = require("jsonwebtoken");
 
 // USER ROUTES
@@ -15,7 +15,11 @@ router.get('/users/:username/following', authenticateToken, userController.getFo
 router.post('/users/:username/following', authenticateToken, userController.addFollowing)
 
 // MESSAGE ROUTES
-router.post('/users/:username/messages', authenticateToken, messageController.getMessages)
+router.get('/users/:username/messages', authenticateToken, messageController.getMessages)
+router.post('/users/:username/messages', authenticateToken, messageController.create)
+//router.get('/users/:username/messages/:id', authenticateToken, messageController.findOne)
+//router.put('/users/:username/messages/:id', authenticateToken, messageController.update)
+//router.delete('/users/:username/messages/:id', authenticateToken, messageController.delete)
 
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization']
