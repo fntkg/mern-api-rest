@@ -3,7 +3,7 @@
   "info": {
     "title": "API",
     "description": "API to manage user accounts and his messages (twitter like)",
-    "version": "0.0.0"
+    "version": "2.1.0"
   },
   "servers": [
     {
@@ -620,7 +620,7 @@
                     "type": "object",
                     "properties": {
                       "id": {
-                        "type": "integer"
+                        "type": "string"
                       },
                       "username": {
                         "type": "string"
@@ -703,7 +703,7 @@
                     "type": "string"
                   },
                   "id_comment": {
-                    "type": "integer"
+                    "type": "string"
                   }
                 }
               }
@@ -712,7 +712,19 @@
         },
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad request"
@@ -754,7 +766,7 @@
             "in": "path",
             "name": "id",
             "schema": {
-              "type": "integer"
+              "type": "string"
             },
             "required": true,
             "description": "Id of the message to retrieve"
@@ -771,7 +783,7 @@
                     "type": "object",
                     "properties": {
                       "id": {
-                        "type": "integer"
+                        "type": "string"
                       },
                       "username": {
                         "type": "string"
@@ -795,13 +807,16 @@
                       "retweets": {
                         "type": "integer"
                       },
+                      "numOfComments": {
+                        "type": "integer"
+                      },
                       "comments": {
                         "type": "array",
                         "items": {
                           "type": "object",
                           "properties": {
                             "id": {
-                              "type": "integer"
+                              "type": "string"
                             },
                             "username": {
                               "type": "string"
@@ -825,7 +840,7 @@
                             "likes": {
                               "type": "integer"
                             },
-                            "comments": {
+                            "numOfComments": {
                               "type": "integer"
                             }
                           }
@@ -835,7 +850,7 @@
                         "type": "object",
                         "properties": {
                           "id": {
-                            "type": "integer"
+                            "type": "string"
                           },
                           "username": {
                             "type": "string"
@@ -859,7 +874,7 @@
                           "likes": {
                             "type": "integer"
                           },
-                          "comments": {
+                          "numOfComments": {
                             "type": "integer"
                           }
                         }
@@ -908,7 +923,7 @@
             "in": "path",
             "name": "id",
             "schema": {
-              "type": "integer"
+              "type": "string"
             },
             "required": true,
             "description": "Id of the message to like or retweet"
@@ -942,7 +957,7 @@
                   "type": "object",
                   "properties": {
                     "id": {
-                      "type": "integer"
+                      "type": "string"
                     },
                     "username": {
                       "type": "string"
@@ -1012,7 +1027,7 @@
             "in": "path",
             "name": "id",
             "schema": {
-              "type": "integer"
+              "type": "string"
             },
             "required": true,
             "description": "Id of the message to delete"
