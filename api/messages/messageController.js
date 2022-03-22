@@ -17,9 +17,9 @@ exports.create = (req, res) => {
         username: req.user,
         original_message: req.body.id_comment,
         content: req.body.content
-    }, function (err){
+    }, function (err, message){
         if (err) return res.sendStatus(400)
-        res.sendStatus(201)
+        res.status(201).send({id: message.id})
     })
 }
 

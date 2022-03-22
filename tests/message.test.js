@@ -57,6 +57,8 @@ describe('Messages', () => {
                     let body = {content: 'MENSAJITO NUEVO'}
                     chai.request(server).post('/users/testUsername/messages').set({ "Authorization": `Bearer ${token}` }).send(body).end((err, res) => {
                         res.should.have.status(201)
+                        res.body.should.be.a('Object')
+                        res.body.should.have.property('id')
                         done()
                     })
                 })
@@ -66,7 +68,22 @@ describe('Messages', () => {
 
     describe('/users/:username/messages/:id', () => {
         it('it should get a message', (done => {
-            done()
+            let user = {username: 'testUsername', name: 'testName', email: 'testEmail@test.com', password: 'testPassword'}
+            chai.request(server).post('/users').send(user).end(() => {
+                let login = { username: 'testUsername', password: 'testPassword'}
+                chai.request(server).post('/login').send(login).end((err, res) => {
+                    let token = res.body.token
+                    let body = {content: 'MENSAJITO NUEVO'}
+                    chai.request(server).post('/users/testUsername/messages').set({ "Authorization": `Bearer ${token}` }).send(body).end((err, res) => {
+                        let id = res.body.id
+                        chai.request(server).get('/users/testUsername/messages/'+id).set({ "Authorization": `Bearer ${token}` }).end((err,res) => {
+                            res.should.have.status(200)
+                            res.body.should.be.a('Object')
+                            done()
+                        })
+                    })
+                })
+            })
         }))
     })
 })

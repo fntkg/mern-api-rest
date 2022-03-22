@@ -17,7 +17,7 @@ router.post('/users/:username/following', authenticateToken, userController.addF
 // MESSAGE ROUTES
 router.get('/users/:username/messages', authenticateToken, messageController.getMessages)
 router.post('/users/:username/messages', authenticateToken, messageController.create)
-//router.get('/users/:username/messages/:id', authenticateToken, messageController.findOne)
+router.get('/users/:username/messages/:id', authenticateToken, messageController.findOne)
 //router.put('/users/:username/messages/:id', authenticateToken, messageController.update)
 //router.delete('/users/:username/messages/:id', authenticateToken, messageController.delete)
 
