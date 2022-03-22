@@ -6,7 +6,7 @@ const messageSchema = new Schema({
     user: { type: Schema.Types.ObjectId, ref: 'User'}, // Extract exact info on request
     date: { type: Date, default: Date.now },
     likes: { type: Number, default: 0},
-    retweets: { type: Number, default: 0},
+    shared: { type: Number, default: 0},
     original_message: { type: Schema.Types.ObjectId, ref: 'Message', default: null }, // Extract info on request
     comments: [{ type: Schema.Types.ObjectId, ref: 'Message', default: null }], // Extract info on request
     numOfComments: { type: Number, default: 0},

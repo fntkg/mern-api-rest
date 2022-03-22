@@ -1,5 +1,6 @@
 const Message = require('./messageModel');
 const mongoose = require("mongoose");
+const User = require("../users/userModel");
 
 exports.getMessages = (req, res) => {
     if (req.user !== req.params.username) return res.sendStatus(403)
@@ -34,7 +35,7 @@ exports.findOne = (req, res) => {
                 path: 'user',
                 projection: 'username name avatar'
             }
-    }).
+        }).
         populate({
             path: 'comments',
             projection: 'id date content likes retweets numOfComments user',
@@ -46,4 +47,27 @@ exports.findOne = (req, res) => {
         if (err) return res.sendStatus(400)
         return res.status(200).send(message)
     })
+}
+
+exports.update = (req, res) => {
+    if (req.user !== req.params.username) return res.sendStatus(403)
+    if(req.body.like === true){
+        Message.findOneAndUpdate(
+            {id: req.body.id},
+            {$inc : {'like' : 1},
+                options: {new: true}
+            }).exec(function (err, message){
+            if (err) return res.sendStatus(400)
+        })
+    }
+    if(req.body.share === true){
+        Message.findOneAndUpdate(
+            {id: req.body.id},
+            {$inc : {'shared' : 1},
+            options: {new: true}
+        }).exec(function (err, message){
+            if (err) return res.sendStatus(400)
+        })
+    }
+    return res.status(200).send(message)
 }

@@ -638,10 +638,10 @@
                       "content": {
                         "type": "string"
                       },
-                      "retweets": {
+                      "shared": {
                         "type": "integer"
                       },
-                      "is_retweet": {
+                      "is_shared": {
                         "type": "boolean"
                       },
                       "likes": {
@@ -804,7 +804,7 @@
                       "likes": {
                         "type": "integer"
                       },
-                      "retweets": {
+                      "shared": {
                         "type": "integer"
                       },
                       "numOfComments": {
@@ -834,7 +834,7 @@
                             "content": {
                               "type": "string"
                             },
-                            "retweets": {
+                            "shared": {
                               "type": "integer"
                             },
                             "likes": {
@@ -868,7 +868,7 @@
                           "content": {
                             "type": "string"
                           },
-                          "retweets": {
+                          "shared": {
                             "type": "integer"
                           },
                           "likes": {
@@ -900,7 +900,7 @@
         }
       },
       "put": {
-        "summary": "Like or retweet a message",
+        "summary": "Like or share a message",
         "security": [
           {
             "bearerAuth": []
@@ -926,7 +926,7 @@
               "type": "string"
             },
             "required": true,
-            "description": "Id of the message to like or retweet"
+            "description": "Id of the message to like or share"
           }
         ],
         "requestBody": {
@@ -940,7 +940,7 @@
                   "like": {
                     "type": "boolean"
                   },
-                  "retweet": {
+                  "shared": {
                     "type": "boolean"
                   }
                 }
@@ -975,7 +975,7 @@
                     "content": {
                       "type": "string"
                     },
-                    "retweets": {
+                    "shared": {
                       "type": "integer"
                     },
                     "likes": {
