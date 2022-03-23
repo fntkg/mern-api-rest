@@ -79,15 +79,14 @@ describe('Messages', () => {
                         chai.request(server).get('/users/testUsername/messages/'+id).set({ "Authorization": `Bearer ${token}` }).end((err,res) => {
                             res.should.have.status(200)
                             res.body.should.be.a('Object')
+                            res.body.should.have.property("_id");
                             done()
                         })
                     })
                 })
             })
         }))
-    })
 
-    describe('/users/:username/messages/:id', () => {
         it('it should like and share a message', (done => {
             let user = {username: 'testUsername', name: 'testName', email: 'testEmail@test.com', password: 'testPassword'}
             chai.request(server).post('/users').send(user).end(() => {
@@ -98,21 +97,18 @@ describe('Messages', () => {
                     chai.request(server).post('/users/testUsername/messages').set({ "Authorization": `Bearer ${token}` }).send(body).end((err, res) => {
                         let id = res.body.id
                         chai.request(server).get('/users/testUsername/messages/'+id).set({ "Authorization": `Bearer ${token}` }).end((err,res) => {
-                            res.should.have.status(200)
-                            res.body.should.be.a('Object')
-                        })
-                        body = {
-                            like: true,
-                            share: true
-                        }
-                        chai.request(server).put('/users/testUsername/messages/'+id).set({ "Authorization": `Bearer ${token}` }).send(body).end((err,res) => {
-                            res.should.have.status(200)
-                            res.body.should.be.a('Object')
-                            console.log(res)
-                            done()
+                            body = {
+                                like: true,
+                                shared: true
+                            }
+                            chai.request(server).put('/users/testUsername/messages/'+id).set({ "Authorization": `Bearer ${token}` }).send(body).end((err,res) => {
+                                res.should.have.status(200)
+                                res.body.should.be.a('Object')
+                                res.body.should.have.property("_id");
+                                done()
+                            })
                         })
                     })
-
                 })
             })
         }))

@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const { Schema } = mongoose
 
 const messageSchema = new Schema({
-    id: Schema.Types.ObjectId,
+    _id: Schema.Types.ObjectId,
     user: { type: Schema.Types.ObjectId, ref: 'User'}, // Extract exact info on request
     date: { type: Date, default: Date.now },
     likes: { type: Number, default: 0},

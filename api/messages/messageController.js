@@ -14,7 +14,7 @@ exports.getMessages = (req, res) => {
 exports.create = (req, res) => {
     if (req.user !== req.params.username) return res.sendStatus(403)
     Message.create({
-        id: new mongoose.Types.ObjectId(),
+        _id: new mongoose.Types.ObjectId(),
         username: req.user,
         original_message: req.body.id_comment,
         content: req.body.content
@@ -26,11 +26,11 @@ exports.create = (req, res) => {
 
 exports.findOne = (req, res) => {
     if (req.user !== req.params.username) return res.sendStatus(403)
-    Message.findOne({id: req.body.id}, 'id user date content likes retweets numOfComments comments original_message').
+    Message.findOne({_id: req.params.id}, '_id user date content likes shared numOfComments comments original_message').
         populate('user', 'username name avatar').
         populate({
             path: 'original_message',
-            projection: 'id date content likes retweets numOfComments user',
+            projection: '_id date content likes shared numOfComments user',
             populate: {
                 path: 'user',
                 projection: 'username name avatar'
@@ -38,7 +38,7 @@ exports.findOne = (req, res) => {
         }).
         populate({
             path: 'comments',
-            projection: 'id date content likes retweets numOfComments user',
+            projection: '_id date content likes shared numOfComments user',
             populate: {
                 path: 'user',
                 projection: 'username name avatar'
@@ -51,23 +51,12 @@ exports.findOne = (req, res) => {
 
 exports.update = (req, res) => {
     if (req.user !== req.params.username) return res.sendStatus(403)
-    if(req.body.like === true){
-        Message.findOneAndUpdate(
-            {id: req.body.id},
-            {$inc : {'like' : 1},
-                options: {new: true}
-            }).exec(function (err, message){
-            if (err) return res.sendStatus(400)
-        })
-    }
-    if(req.body.share === true){
-        Message.findOneAndUpdate(
-            {id: req.body.id},
-            {$inc : {'shared' : 1},
-            options: {new: true}
-        }).exec(function (err, message){
-            if (err) return res.sendStatus(400)
-        })
-    }
-    return res.status(200).send(message)
+    Message.findOneAndUpdate(
+        {_id: req.params.id},
+        {$inc: {'likes' : +req.body.like, 'shared' : +req.body.shared}},
+        {new: true}
+    ).exec(function (err, message){
+        if (err) return res.sendStatus(400)
+        return res.status(200).send(message)
+    })
 }
