@@ -38,12 +38,24 @@ describe('Messages', () => {
                 let login = { username: 'testUsername', password: 'testPassword'}
                 chai.request(server).post('/login').send(login).end((err, res) => {
                     let token = res.body.token
-                    chai.request(server).get('/users/testUsername/messages').set({ "Authorization": `Bearer ${token}` }).end((err, res) => {
-                        res.should.have.status(200)
-                        res.body.should.be.a('array');
-                        res.body.length.should.be.eql(0)
-                        done()
+                    let body = {content: 'MENSAJITO NUEVO 1'}
+                    chai.request(server).post('/users/testUsername/messages').set({ "Authorization": `Bearer ${token}` }).send(body).end((err, res) => {
+                        let body = {content: 'MENSAJITO NUEVO 2'}
+                        chai.request(server).post('/users/testUsername/messages').set({ "Authorization": `Bearer ${token}` }).send(body).end((err, res) => {
+                            chai.request(server).get('/users/testUsername/messages').set({ "Authorization": `Bearer ${token}` }).end((err, res) => {
+                                //console.log(res.body)
+                                res.should.have.status(200)
+                                res.body.should.be.a('array');
+                                res.body.length.should.be.eql(2)
+                                //res.body.should.have.property("username").equals("testUsername")
+                                //res.body.should.have.property("name").equals("testName")
+                                //res.body.should.have.property("likes").equals(0)
+                                //res.body.should.have.property("shared").equals(0)
+                                done()
+                            })
+                        })
                     })
+
                 })
             })
         })
@@ -79,7 +91,7 @@ describe('Messages', () => {
                         chai.request(server).get('/users/testUsername/messages/'+id).set({ "Authorization": `Bearer ${token}` }).end((err,res) => {
                             res.should.have.status(200)
                             res.body.should.be.a('Object')
-                            res.body.should.have.property("_id");
+                            res.body.should.have.property("_id").equals(id)
                             done()
                         })
                     })
@@ -104,7 +116,13 @@ describe('Messages', () => {
                             chai.request(server).put('/users/testUsername/messages/'+id).set({ "Authorization": `Bearer ${token}` }).send(body).end((err,res) => {
                                 res.should.have.status(200)
                                 res.body.should.be.a('Object')
-                                res.body.should.have.property("_id");
+                                res.body.should.have.property("_id").equals(id);
+                                res.body.should.have.property("likes").equals(1);
+                                res.body.should.have.property("shared").equals(1);
+                                res.body.should.have.property("original_message").equals(null);
+                                res.body.should.have.property("numOfComments").equals(0);
+                                res.body.should.have.property("comments").that.is.empty
+                                res.body.should.have.property("content").equals("MENSAJITO NUEVO");
                                 done()
                             })
                         })
