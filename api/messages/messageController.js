@@ -25,7 +25,6 @@ exports.create = (req, res) => {
                 content: req.body.content,
             }, function (err, message){
                 if (err) return res.sendStatus(400)
-                console.log('>> Mensaje creado: ' + message)
                 res.status(201).send({id: message.id})
             })
         })
@@ -34,9 +33,9 @@ exports.create = (req, res) => {
 
 exports.findOne = (req, res) => {
     if (req.user !== req.params.username) return res.sendStatus(403)
-    Message.findOne({_id: req.params.id}, ).exec(function (err, message){
+    Message.findOne({_id: req.params.id}, ).populate('user').exec(function (err, message){
         if (err) return res.sendStatus(400)
-        console.log('Retrieved message: ' + message)
+        //console.log('Retrieved message: ' + message)
         return res.status(200).send(message)
     })
 }
