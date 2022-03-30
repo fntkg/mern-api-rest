@@ -1,3 +1,4 @@
+
 const express = require('express');
 const app = express();
 const db = require('./db');
@@ -17,5 +18,12 @@ app.use(function(req, res, next) {
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument)
 );
 app.use('/', userRoutes)
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+    res.status(404).send(
+        "<h1>Page not found on the server</h1>")
+    return;
+});
 
 module.exports = app;

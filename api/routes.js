@@ -20,6 +20,7 @@ router.post('/users/:username/messages', authenticateToken, messageController.cr
 router.get('/users/:username/messages/:id', authenticateToken, messageController.findOne)
 router.put('/users/:username/messages/:id', authenticateToken, messageController.update)
 //router.delete('/users/:username/messages/:id', authenticateToken, messageController.delete)
+//router.put('/users/:username/messages/:id', authenticateToken, messageController.comment)
 
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization']
