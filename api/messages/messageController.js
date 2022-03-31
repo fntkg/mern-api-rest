@@ -51,3 +51,12 @@ exports.update = (req, res) => {
         return res.status(200).send(message)
     })
 }
+
+exports.delete = (req, res) => {
+    if (req.user !== req.params.username) return res.sendStatus(403)
+    Message.findOneAndRemove({_id: req.params.id}, function (err, user) {
+        if (err) return res.sendStatus(400)
+        if (!user) return res.sendStatus(404)
+        return res.sendStatus(204)
+    })
+}

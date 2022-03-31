@@ -21,9 +21,7 @@ app.use('/', userRoutes)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-    res.status(404).send(
-        "<h1>Page not found on the server</h1>")
-    return;
+    return res.status(404)
 });
 
 module.exports = app;
