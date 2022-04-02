@@ -89,10 +89,16 @@ describe('Messages', () => {
                     chai.request(server).post('/users/testUsername/messages').set({ "Authorization": `Bearer ${token}` }).send(body).end((err, res) => {
                         let id = res.body.id
                         chai.request(server).get('/users/testUsername/messages/'+id).set({ "Authorization": `Bearer ${token}` }).end((err,res) => {
-                            res.should.have.status(200)
-                            res.body.should.be.a('Object')
-                            res.body.should.have.property("_id").equals(id)
-                            done()
+                            let body = {content: 'MENSAJITO RESPUESTA', id_comment: id}
+                            chai.request(server).post('/users/testUsername/messages').set({ "Authorization": `Bearer ${token}` }).send(body).end((err, res) => {
+                                id = res.body.id
+                                chai.request(server).get('/users/testUsername/messages/'+id).set({ "Authorization": `Bearer ${token}` }).end((err,res) => {
+                                    res.should.have.status(200)
+                                    res.body.should.be.a('Object')
+                                    res.body.should.have.property("_id").equals(id)
+                                    done()
+                                })
+                            })
                         })
                     })
                 })

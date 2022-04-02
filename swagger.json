@@ -785,14 +785,19 @@
                       "id": {
                         "type": "string"
                       },
-                      "username": {
-                        "type": "string"
-                      },
-                      "name": {
-                        "type": "string"
-                      },
-                      "avatar": {
-                        "type": "string"
+                      "user": {
+                        "type": "object",
+                        "properties": {
+                          "username": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "avatar": {
+                            "type": "string"
+                          }
+                        }
                       },
                       "date": {
                         "type": "string",
@@ -818,14 +823,19 @@
                             "id": {
                               "type": "string"
                             },
-                            "username": {
-                              "type": "string"
-                            },
-                            "name": {
-                              "type": "string"
-                            },
-                            "avatar": {
-                              "type": "string"
+                            "user": {
+                              "type": "object",
+                              "properties": {
+                                "username": {
+                                  "type": "string"
+                                },
+                                "name": {
+                                  "type": "string"
+                                },
+                                "avatar": {
+                                  "type": "string"
+                                }
+                              }
                             },
                             "date": {
                               "type": "string",
@@ -852,14 +862,19 @@
                           "id": {
                             "type": "string"
                           },
-                          "username": {
-                            "type": "string"
-                          },
-                          "name": {
-                            "type": "string"
-                          },
-                          "avatar": {
-                            "type": "string"
+                          "user": {
+                            "type": "object",
+                            "properties": {
+                              "username": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "avatar": {
+                                "type": "string"
+                              }
+                            }
                           },
                           "date": {
                             "type": "string",

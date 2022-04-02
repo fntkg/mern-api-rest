@@ -8,7 +8,6 @@ exports.getMessages = (req, res) => {
         populate('user', 'username name avatar').
         exec(function (err, messages){
             if (err) return res.sendStatus(400)
-
         res.status(200).send(messages)
     })
 }
@@ -16,7 +15,8 @@ exports.getMessages = (req, res) => {
 exports.create = (req, res) => {
     if (req.user !== req.params.username) return res.sendStatus(403)
     User.findOne({username: req.user}).
-        exec(function (err, user){
+        exec(function (err){
+            if (err) return res.sendStatus(400)
         User.findOne({username: req.user}, 'id').exec(function (err, user){
             Message.create({
                 _id: new mongoose.Types.ObjectId(),
@@ -33,9 +33,11 @@ exports.create = (req, res) => {
 
 exports.findOne = (req, res) => {
     if (req.user !== req.params.username) return res.sendStatus(403)
-    Message.findOne({_id: req.params.id}, ).populate('user').exec(function (err, message){
+    Message.findOne({_id: req.params.id}, ).populate('user', 'username name avatar')
+        .populate({path: 'original_message', populate: {path: 'user'}})
+        .populate({path: 'comments', populate: {path: 'user'}}).exec(function (err, message){
         if (err) return res.sendStatus(400)
-        //console.log('Retrieved message: ' + message)
+        console.log('Retrieved message: ' + message)
         return res.status(200).send(message)
     })
 }
