@@ -4,10 +4,12 @@ const app = express();
 const db = require('./db');
 db.dbConnect()
 const userRoutes = require('./api/routes')
+const cors = require('cors')
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 
+app.use(cors())
 app.use(express.json())
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
