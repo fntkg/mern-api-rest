@@ -1,10 +1,10 @@
-
 const express = require('express');
 const app = express();
 const db = require('./db');
 db.dbConnect()
 const userRoutes = require('./api/routes')
 const cors = require('cors')
+
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');

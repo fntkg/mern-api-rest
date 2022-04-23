@@ -1,6 +1,6 @@
-const Message = require('./messageModel');
-const mongoose = require("mongoose");
-const User = require("../users/userModel");
+const Message = require('./messageModel')
+const mongoose = require("mongoose")
+const User = require("../users/userModel")
 
 exports.getMessages = (req, res) => {
     if (req.user !== req.params.username) return res.sendStatus(403)
