@@ -1,5 +1,7 @@
 import server from "../../server";
 import mongoose from "mongoose";
+import User from "../users/userModel";
+import Message from "../messages/messageModel";
 const chatMessage = require('./chatModel')
 
 let io = require("socket.io")(server)
@@ -39,6 +41,10 @@ io.on("connection", (socket) => {
             });
         socket.join(updatedRoomName)
 
+        getAllMessagesFromUser(split, unique[0]).then( result =>
+            socket.to(socket).emit("chatMessages",result.get(unique[0], result.get(unique[1])))
+        )
+
         socket.on('newChatMessage', msg => {
             Array.from(socket.rooms)
                 .filter(it => it !== socket.id)
@@ -66,4 +72,24 @@ io.on("connection", (socket) => {
  */
 async function getMostRecentMessages() {
     return chatMessage.find()
+}
+
+//Recoger mensajes 
+async function getAllMessagesFromUser(user, UserID){
+    const users = []
+    const messagesPerUser = new Map()
+    await chatMessage.find({$or:[{producer: user[0], consumer: user[1]},
+                                {producer: user[1], consumer: user[0]}]})
+    .sort({field: "ascending"})
+    .exec( function(err, messages){
+        messages.forEach( (message) => {
+            const otherUser = UserID === messages.producer ? messages.consumer : messages.producer
+            if (messagesPerUser.has(otherUser)){
+                messagesPerUser.get(otherUser).push(message)
+            }else {
+                messagesPerUser.set(otherUser, [message])
+            }
+        })
+    })
+    return messagesPerUser
 }
