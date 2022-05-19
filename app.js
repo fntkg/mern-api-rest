@@ -9,13 +9,13 @@ const cors = require('cors')
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 
-const corsOptions ={
+/*const corsOptions ={
     origin:'*',
     credentials:true,            //access-control-allow-credentials:true
     optionSuccessStatus:200,
-}
+}*/
 
-app.use(cors(corsOptions))
+app.use(cors())
 app.use(express.json())
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument)
