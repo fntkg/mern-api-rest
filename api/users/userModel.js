@@ -4,7 +4,7 @@ const Bcrypt = require("bcryptjs")
 
 const userSchema = new Schema({
     _id: Schema.Types.ObjectId,
-    email: { type: String, unique: true, required: true, match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address'] },
+    email: { type: String, unique: true, required: true},
     username: { type: String, unique: true, required: true},
     password: { type: String, required: true },
     name: { type: String, required: true },
