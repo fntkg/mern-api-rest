@@ -35,6 +35,7 @@ function authenticateToken(req, res, next) {
     } else {
         return res.sendStatus(401)
     }
+	
 }
 
 module.exports = router

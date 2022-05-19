@@ -74,7 +74,7 @@ async function getMostRecentMessages() {
     return chatMessage.find()
 }
 
-//Recoger mensajes 
+//Recoger mensajes
 async function getAllMessagesFromUser(user, UserID){
     const users = []
     const messagesPerUser = new Map()
