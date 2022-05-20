@@ -15,9 +15,9 @@ router.get('/users/:username/following', authenticateToken, userController.getFo
 router.post('/users/:username/following', authenticateToken, userController.addFollowing)
 
 // MESSAGE ROUTES
-router.get('/users/:username/messages', authenticateToken, messageController.getMessages)
+router.get('/users/:username/messages', messageController.getMessages)
 router.post('/users/:username/messages', authenticateToken, messageController.create)
-router.get('/users/:username/messages/:id', authenticateToken, messageController.findOne)
+router.get('/users/:username/messages/:id', messageController.findOne)
 router.put('/users/:username/messages/:id', authenticateToken, messageController.update)
 router.delete('/users/:username/messages/:id', authenticateToken, messageController.delete)
 
@@ -35,7 +35,7 @@ function authenticateToken(req, res, next) {
     } else {
         return res.sendStatus(401)
     }
-	
+
 }
 
 module.exports = router

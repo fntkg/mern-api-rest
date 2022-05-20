@@ -590,11 +590,6 @@
     "/users/{username}/messages": {
       "get": {
         "summary": "Return a list of messages from an user",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
         "tags": [
           "messages"
         ],
@@ -744,11 +739,6 @@
     "/users/{username}/messages/{id}": {
       "get": {
         "summary": "Get a message",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
         "tags": [
           "messages"
         ],
