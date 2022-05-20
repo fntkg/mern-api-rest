@@ -13,13 +13,12 @@ exports.getMessages = (req, res) => {
 }
 
 exports.create = (req, res) => {
-    if (req.user !== req.params.username) return res.sendStatus(403)
     User.findOne({username: req.user}).
         exec(function (err){
         if (err) {
             return res.sendStatus(400)
         }
-        User.findOne({username: req.user}, 'id').exec(function (err, user){
+        User.findOne({username: req.params.username}, 'id').exec(function (err, user){
             if (req.body.hasOwnProperty('id_comment')) {
                 Message.findOne({_id: req.body.id_comment}, 'id').exec(function (err, message){
                     Message.create({
