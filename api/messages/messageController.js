@@ -16,17 +16,39 @@ exports.create = (req, res) => {
     if (req.user !== req.params.username) return res.sendStatus(403)
     User.findOne({username: req.user}).
         exec(function (err){
-            if (err) return res.sendStatus(400)
+        if (err) {
+            return res.sendStatus(400)
+        }
         User.findOne({username: req.user}, 'id').exec(function (err, user){
-            Message.create({
-                _id: new mongoose.Types.ObjectId(),
-                user: user.id,
-                original_message: req.body.id_comment,
-                content: req.body.content,
-            }, function (err, message){
-                if (err) return res.sendStatus(400)
-                res.status(201).send({id: message.id})
-            })
+            if (req.body.hasOwnProperty('id_comment')) {
+                Message.findOne({_id: req.body.id_comment}, 'id').exec(function (err, message){
+                    Message.create({
+                        _id: new mongoose.Types.ObjectId(),
+                        user: user.id,
+                        original_message: message.id,
+                        content: req.body.content,
+                    }, function (err, message){
+                        if (err) {
+                            console.log(err)
+                            return res.sendStatus(400)
+                        }
+                        res.status(201).send({id: message.id})
+                    })
+                })
+            }
+            else {
+                Message.create({
+                    _id: new mongoose.Types.ObjectId(),
+                    user: user.id,
+                    content: req.body.content,
+                }, function (err, message){
+                    if (err) {
+                        console.log(err)
+                        return res.sendStatus(400)
+                    }
+                    res.status(201).send({id: message.id})
+                })
+            }
         })
     })
 }
