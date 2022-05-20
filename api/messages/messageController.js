@@ -53,7 +53,6 @@ exports.create = (req, res) => {
 }
 
 exports.findOne = (req, res) => {
-    if (req.user !== req.params.username) return res.sendStatus(403)
     Message.findOne({_id: req.params.id}, ).populate('user', 'username name avatar')
         .populate({path: 'original_message', populate: {path: 'user'}})
         .populate({path: 'comments', populate: {path: 'user'}}).exec(function (err, message){
